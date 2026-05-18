@@ -53,7 +53,7 @@ PortfolioHUB/
 
 Acesse a página do projeto via GitHub Pages:
 
-`https://seu-usuario.github.io/PortfolioHUB`
+`https://github.com/PedroRLMDF/projetosacademicosHUB`
 
 ---
 
