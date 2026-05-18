@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LimpeJá — Faxina a Domicílio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde-escuro:  #1c4a35;
+      --verde:         #2b6b4e;
+      --verde-medio:   #3d8c68;
+      --verde-claro:   #a8d5bb;
+      --verde-palido:  #e8f3ed;
+      --areia:         #f5f0e8;
+      --areia-escura:  #e0d8cc;
+      --texto:         #181814;
+      --texto-suave:   #5a5a54;
+      --branco:        #fdfcf9;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--areia);
+      color: var(--texto);
+      overflow-x: hidden;
+    }
+
+    /* GRAIN */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E");
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem 5rem;
+      background: rgba(245,240,232,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--areia-escura);
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--verde-escuro);
+    }
+    .logo span { color: var(--verde-medio); font-style: italic; }
+
+    .dev-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--verde-claro);
+      color: var(--verde);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 2px;
+    }
+
+    .pulso {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--verde-medio);
+      animation: pulso 2s ease-in-out infinite;
+    }
+
+    @keyframes pulso {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.25; transform: scale(0.65); }
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 4rem;
+      padding: 6rem 5rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .hero-esquerda { animation: subir 0.9s cubic-bezier(0.22,1,0.36,1) both; }
+
+    .kicker {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--verde);
+      border-bottom: 1px solid var(--verde-claro);
+      padding-bottom: 4px;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 5.5vw, 5.5rem);
+      font-weight: 600;
+      line-height: 1.06;
+      letter-spacing: -1.5px;
+      color: var(--texto);
+      margin-bottom: 1.8rem;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--verde);
+    }
+
+    .descricao {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--texto-suave);
+      max-width: 480px;
+      margin-bottom: 3rem;
+    }
+
+    .aviso {
+      background: var(--branco);
+      border: 1px solid var(--areia-escura);
+      border-left: 3px solid var(--verde-medio);
+      border-radius: 4px;
+      padding: 1.4rem 1.6rem;
+      max-width: 500px;
+    }
+
+    .aviso strong {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--verde-escuro);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .aviso p {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: var(--texto-suave);
+      line-height: 1.65;
+    }
+
+    /* CARD DIREITA */
+    .hero-direita {
+      animation: subir 0.9s 0.18s cubic-bezier(0.22,1,0.36,1) both;
+      display: flex;
+      justify-content: center;
+    }
+
+    .card-mockup {
+      width: 100%;
+      max-width: 360px;
+      background: var(--branco);
+      border: 1px solid var(--areia-escura);
+      border-radius: 6px;
+      padding: 2.4rem 2rem;
+      box-shadow: 0 32px 80px rgba(28,74,53,0.07), 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .card-topo { margin-bottom: 2rem; }
+
+    .card-topo p {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--verde-medio);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-topo h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--texto);
+      letter-spacing: -0.3px;
+    }
+
+    .progresso-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--texto-suave);
+    }
+
+    .progresso-label strong { color: var(--verde); font-weight: 500; }
+
+    .barra {
+      background: var(--areia-escura);
+      height: 5px;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .barra-fill {
+      height: 100%;
+      background: var(--verde-medio);
+      border-radius: 999px;
+      width: 0;
+      animation: crescer 1.8s 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+
+    @keyframes crescer {
+      from { width: 0; }
+      to   { width: 30%; }
+    }
+
+    .status-lista {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .status-lista li {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.85rem;
+      color: var(--texto-suave);
+    }
+
+    .circulo {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .feito    { background: var(--verde-palido); color: var(--verde); }
+    .pendente { border: 1.5px dashed var(--areia-escura); color: transparent; }
+
+    .divisor {
+      height: 1px;
+      background: var(--areia-escura);
+      margin: 1.6rem 0;
+    }
+
+    .rodape-card {
+      font-size: 0.75rem;
+      color: var(--texto-suave);
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
+    /* FUNCIONALIDADES */
+    .funcionalidades {
+      background: var(--verde-escuro);
+      padding: 6rem 5rem;
+    }
+
+    .func-inner { max-width: 1100px; margin: 0 auto; }
+
+    .func-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .func-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 600;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      color: var(--branco);
+    }
+
+    .func-header h2 em { font-style: italic; color: var(--verde-claro); }
+
+    .func-header p {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.4);
+      max-width: 220px;
+      line-height: 1.6;
+      text-align: right;
+    }
+
+    .func-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .func-item {
+      padding: 2rem 1.8rem;
+      background: var(--verde-escuro);
+      transition: background 0.3s;
+    }
+
+    .func-item:hover { background: rgba(255,255,255,0.04); }
+
+    .func-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.1);
+      line-height: 1;
+      margin-bottom: 1.2rem;
+    }
+
+    .func-item h4 {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--branco);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    .func-item p {
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.42);
+      line-height: 1.65;
+    }
+
+    .func-tag {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--verde-claro);
+      border: 1px solid rgba(168,213,187,0.3);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem 5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-top: 1px solid var(--areia-escura);
+    }
+
+    .logo-foot {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--verde-escuro);
+      letter-spacing: -0.3px;
+    }
+
+    .logo-foot span { font-style: italic; color: var(--verde-medio); }
+
+    footer p {
+      font-size: 0.78rem;
+      color: var(--texto-suave);
+      font-weight: 300;
+    }
+
+    @keyframes subir {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 860px) {
+      header { padding: 1.2rem 1.8rem; }
+      .hero { grid-template-columns: 1fr; padding: 4rem 1.8rem; min-height: auto; gap: 3rem; }
+      .hero-direita { display: none; }
+      .funcionalidades { padding: 4rem 1.8rem; }
+      .func-header p { text-align: left; }
+      footer { padding: 2rem 1.8rem; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Limpe<span>Já</span></div>
+    <div class="dev-badge">
+      <div class="pulso"></div>
+      Em desenvolvimento
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-esquerda">
+      <span class="kicker">Projeto em andamento</span>
+      <h1>Faxina a domicílio,<br><em>do jeito certo.</em></h1>
+      <p class="descricao">
+        O LimpeJá está sendo construído para conectar clientes a diaristas de confiança de forma simples, segura e sem complicação — direto pelo celular ou computador.
+      </p>
+      <div class="aviso">
+        <strong>Projeto em desenvolvimento</strong>
+        <p>
+          Este site representa a fase inicial do LimpeJá. As funcionalidades estão sendo planejadas e desenvolvidas. Em breve, a plataforma estará disponível para uso.
+        </p>
+      </div>
+    </div>
+
+    <div class="hero-direita">
+      <div class="card-mockup">
+        <div class="card-topo">
+          <p>Status atual</p>
+          <h3>LimpeJá — v1.0</h3>
+        </div>
+
+        <div class="progresso-label">
+          <span>Progresso geral</span>
+          <strong>30%</strong>
+        </div>
+        <div class="barra">
+          <div class="barra-fill"></div>
+        </div>
+
+        <ul class="status-lista">
+          <li><div class="circulo feito">&#10003;</div> Página inicial criada</li>
+          <li><div class="circulo feito">&#10003;</div> Repositório no GitHub</li>
+          <li><div class="circulo pendente"></div> Cadastro de clientes</li>
+          <li><div class="circulo pendente"></div> Agendamento de serviços</li>
+          <li><div class="circulo pendente"></div> Sistema de avaliações</li>
+          <li><div class="circulo pendente"></div> Pagamento online</li>
+        </ul>
+
+        <div class="divisor"></div>
+        <p class="rodape-card">Previsão de lançamento: a definir</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="funcionalidades">
+    <div class="func-inner">
+      <div class="func-header">
+        <h2>O que está<br><em>planejado</em></h2>
+        <p>Funcionalidades previstas para a versão completa da plataforma.</p>
+      </div>
+
+      <div class="func-grid">
+        <div class="func-item">
+          <div class="func-num">01</div>
+          <h4>Agendamento online</h4>
+          <p>O cliente escolhe o dia, horário e tipo de limpeza direto pela plataforma, sem precisar ligar para ninguém.</p>
+          <span class="func-tag">Planejado</span>
+        </div>
+        <div class="func-item">
+          <div class="func-num">02</div>
+          <h4>Diaristas verificadas</h4>
+          <p>Profissionais com cadastro verificado, avaliações reais e histórico de atendimentos visível ao cliente.</p>
+          <span class="func-tag">Planejado</span>
+        </div>
+        <div class="func-item">
+          <div class="func-num">03</div>
+          <h4>Pagamento pela plataforma</h4>
+          <p>Pagamento seguro integrado, sem necessidade de dinheiro em espécie ou transferências manuais.</p>
+          <span class="func-tag">Planejado</span>
+        </div>
+        <div class="func-item">
+          <div class="func-num">04</div>
+          <h4>Atendimento a domicílio</h4>
+          <p>A diarista vai até o endereço do cliente. O serviço acontece na casa do cliente, sem deslocamento necessário.</p>
+          <span class="func-tag">Planejado</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo-foot">Limpe<span>Já</span></div>
+    <p>Projeto academico em desenvolvimento &mdash; Tecnologia da Informacao</p>
+  </footer>
+
+</body>
+</html>
